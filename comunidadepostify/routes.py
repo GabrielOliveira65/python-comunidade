@@ -200,7 +200,7 @@ def excluir_post(post_id):
 def perfil_usuario(user_id):
     posts = Post.query.filter(Post.autor.has(id=user_id)).order_by(Post.id.desc())
     usuario = Usuario.query.get_or_404(user_id)
-    foto_perfil = current_user.foto_perfil
+    foto_perfil = usuario.foto_perfil
     return render_template('perfil_usuarios.html', posts=posts, usuario=usuario, foto_perfil=foto_perfil)
 
 @app.route('/termos')
