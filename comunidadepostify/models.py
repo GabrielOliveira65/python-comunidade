@@ -12,7 +12,7 @@ class Usuario(database.Model, UserMixin):
     username = database.Column(database.String, nullable=False)
     email = database.Column(database.String, nullable=False, unique=True)
     senha = database.Column(database.String, nullable=False)
-    foto_perfil = database.Column(database.String, default='default.jpg', nullable=False)
+    foto_perfil = database.Column(database.String, default='https://res.cloudinary.com/dkqi5tero/image/upload/v1778596241/default_a27bd038aaced2dc.jpg.png', nullable=False)
     cursos = database.Column(database.String, nullable=False, default='Não informado')
     posts = database.relationship('Post', backref='autor', lazy=True)
 

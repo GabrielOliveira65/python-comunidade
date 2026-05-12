@@ -4,7 +4,7 @@
 
         <div class="row mt-4 border p-3 meupost">
             <div class="col col-2 text-center">
-                <div><img src="{{ url_for('static', filename='fotos_perfil/'+post.autor.foto_perfil) }}" class="img-fluid rounded"></div>
+                <div><img src="{{ post.autor.foto_perfil }}" class="img-fluid rounded"></div>
                 <div style="word-break: break-word;"><strong>{{post.autor.username}}</strong></div>
                 <div class="btn-group mt-1 " style="flex-wrap: wrap; gap: 1px;">
                     {% if post.autor.cursos != "Não informado"%}

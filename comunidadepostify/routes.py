@@ -5,6 +5,8 @@ from comunidadepostify.models import Usuario, Post
 from flask_login import login_user, logout_user, current_user, login_required
 from PIL import Image
 import secrets, os
+import cloudinary.uploader
+import io
 
 @app.route("/")
 def home():
@@ -78,7 +80,7 @@ def sair():
 @app.route('/perfil')
 @login_required
 def perfil():
-    foto_perfil = url_for('static', filename=f'fotos_perfil/{current_user.foto_perfil}')
+    foto_perfil = current_user.foto_perfil
     return render_template('perfil.html', foto_perfil=foto_perfil)
     
 
@@ -99,16 +101,23 @@ def salvar_imagem(imagem):
     # adicionar um código ao nome da imagem
     codigo = secrets.token_hex(8)
     nome, ext = os.path.splitext(imagem.filename)
-    nome_imagem = nome + codigo + ext
+    nome_imagem = nome + "_" + codigo + ext
     # reduzir tamanho da imagem
     tamanho = (200, 200)
     imagem_reduzida = Image.open(imagem)
     imagem_reduzida.thumbnail(tamanho)
     # salvar imagem na pasta fotos_perfil
-    caminho = os.path.join(app.root_path, 'static/fotos_perfil', nome_imagem)
-    imagem_reduzida.save(caminho)
-    return nome_imagem
+    buffer = io.BytesIO()
+    imagem_reduzida.save(buffer, format=imagem_reduzida.format or 'PNG')
+    buffer.seek(0)
 
+    # upload para Cloudinary
+    resultado = cloudinary.uploader.upload(
+        buffer,
+        public_id=nome_imagem
+    )
+    # retorna URL da imagem
+    return resultado['secure_url']  
 
 def atualizar_cursos(form):
     lista_cursos = []
@@ -142,14 +151,14 @@ def editar_perfil():
         flash('Perfil atualizado com sucesso!', 'alert-success')
         return redirect(url_for('perfil'))
    
-    foto_perfil = url_for('static', filename=f'fotos_perfil/{current_user.foto_perfil}')
+    foto_perfil = current_user.foto_perfil
     return render_template('editar_perfil.html', foto_perfil=foto_perfil, form_edit=form_edit, usuario_cursos=usuario_cursos)
 
 @app.route("/perfil/posts")
 @login_required
 def meus_posts():
     posts = Post.query.filter(Post.autor == current_user).order_by(Post.id.desc())
-    foto_perfil = url_for('static', filename=f'fotos_perfil/{current_user.foto_perfil}')
+    foto_perfil = current_user.foto_perfil
     return render_template('meus_posts.html', foto_perfil=foto_perfil, posts=posts)
 
 @app.route('/post/<post_id>', methods=['GET', 'POST'])
@@ -191,7 +200,7 @@ def excluir_post(post_id):
 def perfil_usuario(user_id):
     posts = Post.query.filter(Post.autor.has(id=user_id)).order_by(Post.id.desc())
     usuario = Usuario.query.get_or_404(user_id)
-    foto_perfil = url_for('static', filename=f'fotos_perfil/{usuario.foto_perfil}')
+    foto_perfil = usuario.foto_perfil
     return render_template('perfil_usuarios.html', posts=posts, usuario=usuario, foto_perfil=foto_perfil)
 
 @app.route('/termos')
