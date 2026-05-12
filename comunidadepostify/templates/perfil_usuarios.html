@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="card shadow-sm" style="max-width: 620px; margin: 0 auto;">
+        <div class="row g-0">
+            <div class="col-md-4 p-3 text-center">
+                <img src="{{ foto_perfil }}" class="rounded" width="200" height="200">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title d-flex justify-content-between align-items-center">
+                        {{ usuario.username }}
+                    </h5>
+                  
+                    <div class="border-top mt-5 pt-2">
+                        <div class="row text-center">
+                            <div class="col">
+                                <h6>Cursos</h6>
+                                {% if 'Não informado' in usuario.cursos %}
+                                    <strong>0</strong>
+                                {% else %}
+                                <strong>{{ usuario.cursos.count(';') + 1 }}</strong>
+                                {% endif %}
+                                
+                                
+                            </div>
+                            <div class="col border-start">
+                                <h6>Posts</h6>
+                                <strong>{{ usuario.contar_posts() }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col col-2 text-center">
+        <strong>Cursos</strong><br>
+        {% if usuario.cursos != "Não informado"%}
+            {% for curso in usuario.cursos.split(';') %}
+                <button type="button" class="btn btn-primary disabled mb-2"> {{curso}}</button>
+            {% endfor %}
+        {% else %}
+            <p>{{usuario.username}} ainda não informou nenhum curso.</p>
+        {% endif %}
+    </div>
+</div>
+<div class="container">
+    <hr>
+        {% if usuario.contar_posts() == 0 %}
+        <p class="text-center">{{usuario.username}} não tem nenhum post</p>
+        {%endif%}
+        {% for post in posts %}
+        <div class="row mt-4 border p-3 meupost">
+
+            <div class="col">
+                <a style="text-decoration: none;" href="{{ url_for('exibir_post', post_id=post.id) }}">
+                    <h3>{{post.titulo}}</h3>
+                </a>
+                {% if post.editado != 0 %}
+                <small class="text-muted">{{post.data_criacao.strftime('%H:%M %d/%m/%Y')}} (Editado)</small>
+                {% else %}
+                <small class="text-muted">{{post.data_criacao.strftime('%H:%M %d/%m/%Y')}}</small>
+                {% endif %}
+                <p style="word-break: break-word;">{{post.corpo}}</p>
+            </div>
+        </div>
+        {%endfor%}
+</div>
+
+{% endblock %}

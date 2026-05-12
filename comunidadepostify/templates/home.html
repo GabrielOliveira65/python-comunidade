@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container mt-2">
+        {% if current_user.is_authenticated %}
+        <h1>Comunidade Postify</h1>
+        <h2>Digite com moderação</h2>
+        <hr>
+        {% for post in posts %}
+        <div class="row mt-4 border p-3 meupost">
+            <div class="col col-2 text-center">
+                <a style="text-decoration: none; color: black" href="{{ url_for('perfil_usuario', user_id=post.autor.id) }}">
+                <div><img src="{{ url_for('static', filename='fotos_perfil/'+post.autor.foto_perfil) }}" class="img-fluid rounded"></div>
+                <div style="word-break: break-word;"><strong>{{post.autor.username}}</strong></div>
+                </a>
+                <div class="btn-group mt-1 " style="flex-wrap: wrap; gap: 1px;">
+                    {% if post.autor.cursos != "Não informado"%}
+                        {% for curso in post.autor.cursos.split(';') %}
+                            <button type="button" class="btn btn-primary" disabled>{{curso}}</button>
+                        {% endfor %}
+
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col col-10">
+                <a style="text-decoration: none;" href="{{ url_for('exibir_post', post_id=post.id) }}">
+                    <h3>{{post.titulo}}</h3>
+                </a>
+                {% if post.editado != 0 %}
+                <small class="text-muted">{{post.data_criacao.strftime('%d/%m/%Y')}} (Editado)</small>
+                {% else %}
+                <small class="text-muted">{{post.data_criacao.strftime('%d/%m/%Y')}}</small>
+                {% endif %}
+                <p style="word-break: break-word;">{{post.corpo}}</p>
+            </div>
+        </div>
+        
+        {%endfor%}
+        {%else%}
+        <h1>Projeto Comunidade Postify</h1>
+        <hr>
+        <p>Este projeto foi desenvolvido durante meus estudos em desenvolvimento web, como parte de um curso prático focado na criação de aplicações completas.</p>
+
+        <p>A proposta foi construir uma plataforma de posts (estilo blog), utilizando o microframework Flask em conjunto com SQLAlchemy para gerenciamento do banco de dados.</p>
+
+        <p>Durante o desenvolvimento, foram aplicados conceitos essenciais como:</p>
+
+        <p>
+        * Estruturação de rotas e templates<br>
+        * Integração com banco de dados<br>
+        * Sistema de autenticação e controle de acesso<br>
+        * Manipulação de dados dinâmicos<br>
+        </p>
+        <p>Para a interface, foi utilizado Bootstrap, permitindo a criação de um layout responsivo e organizado.</p>
+
+
+        <p>Este projeto representa a base do meu aprendizado prático, e continuará sendo evoluído com novas funcionalidades e melhorias.</p>
+        {%endif%}
+    </div>
+{% endblock %}

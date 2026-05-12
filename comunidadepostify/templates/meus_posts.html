@@ -1,0 +1,27 @@
+{% extends 'perfil.html' %}
+
+{% block meus_posts %}
+    <div class="container mt-2">
+        <hr>
+        {% if current_user.contar_posts() == 0 %}
+        <p class="text-center">Você ainda não postou nada</p>
+        {%endif%}
+        {% for post in posts %}
+        <div class="row mt-4 border p-3 meupost">
+
+            <div class="col">
+                <a style="text-decoration: none;" href="{{ url_for('exibir_post', post_id=post.id) }}">
+                    <h3>{{post.titulo}}</h3>
+                </a>
+                {% if post.editado != 0 %}
+                <small class="text-muted">{{post.data_criacao.strftime('%H:%M %d/%m/%Y')}} (Editado)</small>
+                {% else %}
+                <small class="text-muted">{{post.data_criacao.strftime('%H:%M %d/%m/%Y')}}</small>
+                {% endif %}
+                <p style="word-break: break-word;">{{post.corpo}}</p>
+            </div>
+        </div>
+        {%endfor%}
+    </div>
+
+{% endblock %}

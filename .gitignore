@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+
+.venv/
+venv/
+env/
+
+comunidadepostify/__pycache__/
+
+instance/
+
+.env
+
+criar_db.py
+testes.py

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        <h1>Usuários na plataforma:</h1>
+        {% for usuario in lista_usuarios %}
+        {% if usuario != current_user %}
+            <div class="card shadow-sm" style="max-width: 620px; margin: 0 auto;">
+                <div class="row g-0">
+                    <div class="col-md-4 p-3 text-center">
+                       
+                        <img src="{{ url_for('static', filename='fotos_perfil/'+usuario.foto_perfil) }}"  class="rounded" width="200" height="200">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title d-flex justify-content-between align-items-center">
+                                {{ usuario.username }}
+                            </h5>
+                          
+                        
+                            <div class="border-top mt-5 pt-2">
+                                <div class="row text-center">
+                                    <div class="col">
+                                        <h6>Cursos</h6>
+                                        {% if 'Não informado' in usuario.cursos %}
+                                            <strong>0</strong>
+                                        {% else %}
+                                        <strong>{{ usuario.cursos.count(';') + 1 }}</strong>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col border-start">
+                                        <h6>Posts</h6>
+                                        <strong>{{ usuario.contar_posts() }}</strong>
+                                    </div>
+                                    <div class="d-grid gap-2 mt-1">
+                                        <a class="d-grid gap-2 mt-1" href="{{ url_for('perfil_usuario', user_id=usuario.id) }}">
+                                        <button type="button" class="btn btn-primary">Ver Perfil</button>
+                                        </a>
+                                    </div>
+                                    <div class="btn-group mt-1 " style="flex-wrap: wrap; gap: 1px;">
+                                        {% if usuario.cursos != "Não informado"%}
+                                            {% for curso in usuario.cursos.split(';') %}
+                                                <button type="button" class="btn btn-primary" disabled>{{curso}}</button>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}
