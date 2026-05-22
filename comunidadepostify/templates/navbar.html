@@ -13,9 +13,6 @@
         <li class="nav-item">
           <a class="nav-link" href="{{url_for('usuarios')}}">Usuários</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Em breve</a>
-        </li> 
         {% endif %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -23,6 +20,7 @@
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{{url_for('contato')}}">Contato</a></li>
+            <li><a class="dropdown-item" href="https://picflow.up.railway.app">PicFlow</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{{url_for('termos_uso')}}">Direitos de uso</a></li>
           </ul>
